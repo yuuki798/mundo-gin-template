@@ -1,7 +1,7 @@
 package appInitialize
 
 import (
-	"github.com/wujunyi792/flamego-quick-template/internal/app"
+	"github.com/trancecho/mundo-be-template/internal/app"
 )
 
 var (

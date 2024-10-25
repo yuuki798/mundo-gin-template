@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wujunyi792/flamego-quick-template/config"
+	"github.com/trancecho/mundo-be-template/config"
 	"os"
 )
 
@@ -12,7 +12,7 @@ var (
 	StartCmd  = &cobra.Command{
 		Use:     "config",
 		Short:   "Generate config file",
-		Example: "app config -p config/config.yaml -f",
+		Example: "app config -p config/config.dev.yaml -f",
 		Run: func(cmd *cobra.Command, args []string) {
 			println("Generate config...")
 			err := load()
@@ -25,7 +25,7 @@ var (
 )
 
 func init() {
-	StartCmd.PersistentFlags().StringVarP(&configYml, "path", "p", "config/config.yaml", "Generate config in provided path")
+	StartCmd.PersistentFlags().StringVarP(&configYml, "path", "p", "config/config.dev.yaml", "Generate config in provided path")
 	StartCmd.PersistentFlags().BoolVarP(&forceGen, "force", "f", false, "Force generate config in provided path")
 }
 

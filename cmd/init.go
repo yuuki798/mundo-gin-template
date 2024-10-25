@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wujunyi792/flamego-quick-template/cmd/config"
-	"github.com/wujunyi792/flamego-quick-template/cmd/create"
-	"github.com/wujunyi792/flamego-quick-template/cmd/server"
+	"github.com/trancecho/mundo-be-template/cmd/config"
+	"github.com/trancecho/mundo-be-template/cmd/create"
+	"github.com/trancecho/mundo-be-template/cmd/server"
 	"os"
 )
 

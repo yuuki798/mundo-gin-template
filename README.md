@@ -1,9 +1,11 @@
-# Flamego-Template
+# mundo-quick-Template
 
-全新的后端快速开发模板
+mundo团队 后端基于gin的快速开发模板
+
+## 
 
 ## 有什么
-- flameGo
+- gin
 - 定时任务
 - Gorm + 多数据库支持
 - memory cache, redis 多缓存支持
@@ -37,3 +39,9 @@ go run main.go create -n [newAppName]
 ```shell
 go run main.go server
 ```
+
+## 更新日志
+
+### 24-10-25 
+
+v1.1.0：将原先wujunyi792的版本融合进yuuki798自己的开发风格，形成最新的mundo template。

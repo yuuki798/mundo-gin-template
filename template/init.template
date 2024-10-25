@@ -2,9 +2,9 @@ package {{.appName}}
 
 import (
 	"context"
-	"github.com/wujunyi792/flamego-quick-template/internal/app"
-	"github.com/wujunyi792/flamego-quick-template/internal/app/{{.appName}}/router"
-	"github.com/wujunyi792/flamego-quick-template/internal/core/kernel"
+	"github.com/trancecho/mundo-be-template/internal/app"
+    "github.com/trancecho/mundo-be-template/core/kernel"
+
 
 	"sync"
 )
@@ -28,7 +28,6 @@ func (p *{{.appNameExport}}) Init(*kernel.Engine) error {
 }
 
 func (p *{{.appNameExport}}) Load(engine *kernel.Engine) error {
-	router.App{{.appNameExport}}Init(engine.Fg)
 	return nil
 }
 

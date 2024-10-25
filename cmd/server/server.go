@@ -4,18 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/flamego/cors"
-	"github.com/flamego/flamego"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-	"github.com/wujunyi792/flamego-quick-template/config"
-	"github.com/wujunyi792/flamego-quick-template/internal/app/appInitialize"
-	"github.com/wujunyi792/flamego-quick-template/internal/core/cache"
-	"github.com/wujunyi792/flamego-quick-template/internal/core/database"
-	"github.com/wujunyi792/flamego-quick-template/internal/core/kernel"
-	"github.com/wujunyi792/flamego-quick-template/internal/core/logx"
-	"github.com/wujunyi792/flamego-quick-template/internal/middleware/gw"
-	"github.com/wujunyi792/flamego-quick-template/pkg/colorful"
-	"github.com/wujunyi792/flamego-quick-template/pkg/ip"
+	"github.com/trancecho/mundo-be-template/config"
+	"github.com/trancecho/mundo-be-template/core/cache"
+	"github.com/trancecho/mundo-be-template/core/database"
+	"github.com/trancecho/mundo-be-template/core/ginx"
+	"github.com/trancecho/mundo-be-template/core/kernel"
+	"github.com/trancecho/mundo-be-template/core/logx"
+	"github.com/trancecho/mundo-be-template/internal/app/appInitialize"
+	"github.com/trancecho/mundo-be-template/pkg/ip"
 	"go.uber.org/zap/zapcore"
 	"net/http"
 	"os"
@@ -47,8 +45,20 @@ var (
 	log = logx.NameSpace("cmd.server")
 )
 
+var env string
+
 func init() {
-	StartCmd.PersistentFlags().StringVarP(&configYml, "config", "c", "config/config.yaml", "Start server with provided configuration file")
+	StartCmd.PersistentFlags().StringVarP(&env, "env", "e", "dev", "Specify the environment: dev or prod")
+	StartCmd.PersistentFlags().StringVarP(&configYml, "config", "c", "", "Start server with provided configuration file")
+
+	// 根据环境变量选择默认配置文件
+	if configYml == "" {
+		if env == "prod" {
+			configYml = "config/config.yaml"
+		} else {
+			configYml = "config/config.dev.yaml"
+		}
+	}
 }
 
 func setUp() {
@@ -66,18 +76,7 @@ func setUp() {
 		logx.Init(zapcore.InfoLevel)
 	}
 
-	flamego.SetEnv(flamego.EnvType(config.GetConfig().MODE))
-	engine.Fg = flamego.New()
-	engine.Fg.Use(flamego.Recovery(), gw.RequestLog(), flamego.Renderer(), cors.CORS(cors.Options{
-		AllowCredentials: true,
-		Methods: []string{
-			http.MethodGet,
-			http.MethodPost,
-			http.MethodPut,
-			http.MethodDelete,
-			http.MethodOptions,
-		},
-	}))
+	engine.Gin = ginx.GinInit()
 
 	database.InitDB()
 	cache.InitCache()
@@ -122,35 +121,42 @@ func load() {
 	}
 }
 
+// 运行 Gin 服务器
 func run() {
+	// 创建 HTTP 服务器实例
 	srv := &http.Server{
-		Addr:    config.GetConfig().Host + ":" + config.GetConfig().Port,
-		Handler: engine.Fg,
+		Addr:    fmt.Sprintf("%s:%s", config.GetConfig().Host, config.GetConfig().Port),
+		Handler: engine.Gin,
 	}
 
+	// 启动服务器（异步启动，避免阻塞）
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			println(colorful.Red("Got Server Err: " + err.Error()))
+			color.Red("Server Error: %s", err.Error())
 		}
 	}()
 
-	println(colorful.Green("Server run at:"))
-	println(fmt.Sprintf("-  Local:   http://localhost:%s", config.GetConfig().Port))
+	// 打印服务器启动信息
+	color.Green("Server running at:")
+	color.Green("-  Local:   http://localhost:%s", config.GetConfig().Port)
 	for _, host := range ip.GetLocalHost() {
-		println(fmt.Sprintf("-  Network: http://%s:%s", host, config.GetConfig().Port))
+		color.Green("-  Network: http://%s:%s", host, config.GetConfig().Port)
 	}
 
+	// 捕获系统信号，等待关闭信号
 	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM) // 捕获 SIGINT 和 SIGTERM 信号
 	<-quit
-	println(colorful.Blue("Shutting down server..."))
+	color.Blue("Shutting down server...")
 
+	// 创建一个带超时的上下文用于优雅地关闭服务器
 	ctx, cancel := context.WithTimeout(engine.Ctx, 5*time.Second)
 	defer cancel()
 
+	// 优雅地关闭服务器
 	if err := srv.Shutdown(ctx); err != nil {
-		println(colorful.Yellow("Server forced to shutdown: " + err.Error()))
+		color.Yellow("Server forced to shutdown: %s", err.Error())
+	} else {
+		color.Green("Server exited gracefully")
 	}
-
-	println(colorful.Green("Server exiting Correctly"))
 }

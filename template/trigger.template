@@ -1,6 +1,6 @@
 package appInitialize
 
-import "github.com/wujunyi792/flamego-quick-template/internal/app/{{.appName}}"
+import "github.com/trancecho/mundo-be-template/internal/app/{{.appName}}"
 
 func init() {
 	apps = append(apps, &{{.appName}}.{{.appNameExport}}{Name: "{{.appName}} module"})

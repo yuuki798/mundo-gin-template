@@ -4,8 +4,8 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	"github.com/wujunyi792/flamego-quick-template/pkg/colorful"
-	"github.com/wujunyi792/flamego-quick-template/pkg/fs"
+	"github.com/trancecho/mundo-be-template/pkg/colorful"
+	"github.com/trancecho/mundo-be-template/pkg/fs"
 	"gopkg.in/yaml.v3"
 	"os"
 )

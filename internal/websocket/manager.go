@@ -1,7 +1,7 @@
 package websocket
 
 import (
-	"github.com/wujunyi792/flamego-quick-template/internal/core/logx"
+	"github.com/trancecho/mundo-be-template/core/logx"
 	"log"
 	"net/http"
 	"time"

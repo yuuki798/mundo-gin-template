@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"github.com/wujunyi792/flamego-quick-template/pkg/colorful"
-	"github.com/wujunyi792/flamego-quick-template/pkg/fs"
+	"github.com/trancecho/mundo-be-template/pkg/colorful"
+	"github.com/trancecho/mundo-be-template/pkg/fs"
 	"os"
 	"path"
 	"strings"
@@ -43,14 +43,14 @@ func load() error {
 	}
 
 	root := path.Join(dir, appName)
-	router := path.Join(dir, appName, "router")
+	//router := path.Join(dir, appName, "router")
 	handler := path.Join(dir, appName, "handler")
 	dto := path.Join(dir, appName, "dto")
 	service := path.Join(dir, appName, "service")
 	trigger := path.Join(dir, "appInitialize")
 
 	_ = fs.IsNotExistMkDir(root)
-	_ = fs.IsNotExistMkDir(router)
+	//_ = fs.IsNotExistMkDir(router)
 	_ = fs.IsNotExistMkDir(handler)
 	_ = fs.IsNotExistMkDir(dto)
 	_ = fs.IsNotExistMkDir(service)
@@ -61,30 +61,30 @@ func load() error {
 	m["appName"] = strings.ToLower(appName[:1]) + appName[1:]
 
 	root += "/init.go"
-	router += "/" + m["appName"] + ".go"
-	handler += "/" + m["appName"] + ".go"
+	//router += "/" + m["appName"] + ".go"
+	//handler += "/" + m["appName"] + ".go"
 	dto += "/" + m["appName"] + ".go"
 	trigger += "/" + m["appName"] + ".go"
 
-	if !force && (fs.FileExist(router) || fs.FileExist(handler) || fs.FileExist(dto) || fs.FileExist(trigger) || fs.FileExist(root)) {
+	if !force && (fs.FileExist(handler) || fs.FileExist(dto) || fs.FileExist(trigger) || fs.FileExist(root)) {
 		return errors.New("target file already exist, use -f flag to cover")
 	}
 
-	if rt, err := template.ParseFiles("template/router.template"); err != nil {
-		return err
-	} else {
-		var b bytes.Buffer
-		_ = rt.Execute(&b, m)
-		fs.FileCreate(b, router)
-	}
-
-	if rt, err := template.ParseFiles("template/handler.template"); err != nil {
-		return err
-	} else {
-		var b bytes.Buffer
-		_ = rt.Execute(&b, m)
-		fs.FileCreate(b, handler)
-	}
+	//if rt, err := template.ParseFiles("template/router.template"); err != nil {
+	//	return err
+	//} else {
+	//	var b bytes.Buffer
+	//	_ = rt.Execute(&b, m)
+	//	fs.FileCreate(b, router)
+	//}
+	//
+	//if rt, err := template.ParseFiles("template/handler.template"); err != nil {
+	//	return err
+	//} else {
+	//	var b bytes.Buffer
+	//	_ = rt.Execute(&b, m)
+	//	fs.FileCreate(b, handler)
+	//}
 
 	if rt, err := template.ParseFiles("template/dto.template"); err != nil {
 		return err
