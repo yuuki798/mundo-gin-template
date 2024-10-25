@@ -1,6 +1,6 @@
 module github.com/trancecho/mundo-be-template
 
-go 1.18
+go 1.22
 
 require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.2+incompatible

@@ -12,7 +12,6 @@ import (
 	"github.com/trancecho/mundo-be-template/core/ginx"
 	"github.com/trancecho/mundo-be-template/core/kernel"
 	"github.com/trancecho/mundo-be-template/core/logx"
-	"github.com/trancecho/mundo-be-template/internal/app/appInitialize"
 	"github.com/trancecho/mundo-be-template/pkg/ip"
 	"go.uber.org/zap/zapcore"
 	"net/http"
@@ -33,8 +32,8 @@ var (
 			println("Loading config...")
 			setUp()
 			println("Loading config complete")
-			println("Loading Api...")
-			load()
+			//println("Loading Api...")
+			//load()
 			println("Loading Api complete")
 		},
 		Run: func(cmd *cobra.Command, args []string) {
@@ -76,50 +75,49 @@ func setUp() {
 		logx.Init(zapcore.InfoLevel)
 	}
 
-	engine.Gin = ginx.GinInit()
-
 	database.InitDB()
 	cache.InitCache()
+	engine.Gin = ginx.GinInit()
 }
 
-func load() {
-	modules := appInitialize.GetApps()
-	for _, module := range modules {
-		_err := module.PreInit(engine)
-		if _err != nil {
-			log.Errorw("failed to pre init app", _err)
-			os.Exit(1)
-		}
-	}
-	for _, module := range modules {
-		_err := module.Init(engine)
-		if _err != nil {
-			log.Errorw("failed to init app", _err)
-			os.Exit(1)
-		}
-	}
-	for _, module := range modules {
-		_err := module.PostInit(engine)
-		if _err != nil {
-			log.Errorw("failed to post init app", _err)
-			os.Exit(1)
-		}
-	}
-	for _, module := range modules {
-		_err := module.Load(engine)
-		if _err != nil {
-			log.Errorw("failed to load app", _err)
-			os.Exit(1)
-		}
-	}
-	for _, module := range modules {
-		_err := module.Start(engine)
-		if _err != nil {
-			log.Errorw("failed to start app", _err)
-			os.Exit(1)
-		}
-	}
-}
+//func load() {
+//	modules := appInitialize.GetApps()
+//	for _, module := range modules {
+//		_err := module.PreInit(engine)
+//		if _err != nil {
+//			log.Errorw("failed to pre init app", _err)
+//			os.Exit(1)
+//		}
+//	}
+//	for _, module := range modules {
+//		_err := module.Init(engine)
+//		if _err != nil {
+//			log.Errorw("failed to init app", _err)
+//			os.Exit(1)
+//		}
+//	}
+//	for _, module := range modules {
+//		_err := module.PostInit(engine)
+//		if _err != nil {
+//			log.Errorw("failed to post init app", _err)
+//			os.Exit(1)
+//		}
+//	}
+//	for _, module := range modules {
+//		_err := module.Load(engine)
+//		if _err != nil {
+//			log.Errorw("failed to load app", _err)
+//			os.Exit(1)
+//		}
+//	}
+//	for _, module := range modules {
+//		_err := module.Start(engine)
+//		if _err != nil {
+//			log.Errorw("failed to start app", _err)
+//			os.Exit(1)
+//		}
+//	}
+//}
 
 // 运行 Gin 服务器
 func run() {
