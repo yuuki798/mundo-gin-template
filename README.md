@@ -39,3 +39,4 @@ go run main.go server
 ### 24-10-25 
 
 v1.1.0：将原先wujunyi792的版本融合进yuuki798自己的开发风格，形成最新的mundo template。
+next: 预计在mundo开发出demo之后，将其特征整合到mundo template中。
