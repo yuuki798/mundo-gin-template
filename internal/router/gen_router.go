@@ -4,8 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/trancecho/mundo-be-template/core/middleware/response"
 	"github.com/trancecho/mundo-be-template/core/middleware/web"
-	"github.com/trancecho/mundo-be-template/core/router/protected"
-	"log"
+	"github.com/trancecho/mundo-be-template/internal/router/protected"
 )
 
 func GenerateRouters(r *gin.Engine) *gin.Engine {
@@ -21,6 +20,8 @@ func GenerateRouters(r *gin.Engine) *gin.Engine {
 		AddMiddleware(response.ResponseMiddleware()).
 		SetRoutes(Entity{}.Router).
 		Build()
+
+	GetMyGroupDetail(baseGroup)
 	{
 		// 继承/base
 		protectedGroup := NewGroupBuilder().
@@ -30,8 +31,8 @@ func GenerateRouters(r *gin.Engine) *gin.Engine {
 			AddMiddleware(web.JWTAuthMiddleware()). // 使用 JWTAuthMiddleware 中间件
 			SetRoutes(protected.Entity{}.Router).
 			Build()
-		log.Println(protectedGroup)
 
+		GetMyGroupDetail(protectedGroup)
 	}
 	return r
 }

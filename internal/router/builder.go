@@ -1,25 +1,45 @@
 package router
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
+	"reflect"
+	"runtime"
 )
 
 // MyGroup 方便扩展和打印group
 type MyGroup struct {
 	name        string
-	fatherGroup *gin.RouterGroup
-	middlewares []gin.HandlerFunc
+	fatherGroup *MyGroup
+	middlewares []string
 
 	g *gin.RouterGroup
 }
 
+func GetMyGroupDetail(group *MyGroup) {
+
+	fmt.Printf("Group Name: %s\n", group.name)
+
+	if group.fatherGroup.name != "" {
+		fmt.Printf("Father Group: %s\n", group.fatherGroup.name)
+	} else {
+		fmt.Println("Father Group: None")
+	}
+
+	fmt.Println("Middlewares:")
+	for _, middleware := range group.middlewares {
+		fmt.Printf("  - %s\n", middleware)
+	}
+	fmt.Printf("\n\n")
+}
+
 type GroupBuilder struct {
-	name        string
-	middlewares []gin.HandlerFunc
-	path        string
-	group       *MyGroup
-	routes      func(*gin.RouterGroup)
+	name           string
+	newMiddlewares []gin.HandlerFunc
+	path           string
+	group          *MyGroup
+	routes         func(*gin.RouterGroup)
 }
 
 func NewGroupBuilder() *GroupBuilder {
@@ -49,7 +69,7 @@ type Routes interface {
 func (b *GroupBuilder) AddMiddleware(middleware ...gin.HandlerFunc) *GroupBuilder {
 	if b.group == nil || b.group.g == nil {
 	}
-	b.group.g.Use(middleware...)
+	b.newMiddlewares = append(b.newMiddlewares, middleware...)
 	return b
 }
 
@@ -67,14 +87,20 @@ func (b *GroupBuilder) Build() *MyGroup {
 	}
 
 	group := b.group.g.Group(b.path)
-	for _, middleware := range b.middlewares {
+
+	var middlewaresAll []string
+	middlewaresAll = append(middlewaresAll, b.group.middlewares...)
+	for _, middleware := range b.newMiddlewares {
 		group.Use(middleware)
+
+		middlewareName := runtime.FuncForPC(reflect.ValueOf(middleware).Pointer()).Name()
+		middlewaresAll = append(middlewaresAll, middlewareName)
 	}
 	b.routes(group)
 	return &MyGroup{
 		name:        b.name,
-		fatherGroup: b.group.g,
-		middlewares: b.middlewares,
+		fatherGroup: b.group,
+		middlewares: middlewaresAll,
 		g:           group,
 	}
 }
