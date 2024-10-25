@@ -10,12 +10,14 @@ import (
 
 func GenerateRouters(r *gin.Engine) *gin.Engine {
 
-	baseGroup := r.Group("")
+	newGroup := &MyGroup{
+		g: r.Group("/"),
+	}
 
-	baseGroup = NewGroupBuilder().
+	baseGroup := NewGroupBuilder().
 		SetName("base").
-		SetFatherGroup(baseGroup).
 		AddRoute("").
+		SetFatherGroup(newGroup).
 		AddMiddleware(response.ResponseMiddleware()).
 		SetRoutes(Entity{}.Router).
 		Build()
