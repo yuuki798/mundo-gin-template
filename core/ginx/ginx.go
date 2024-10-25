@@ -8,7 +8,7 @@ import (
 
 func GinInit() *gin.Engine {
 	r := gin.Default()
-	r.Use(cors.CorsMiddleware())
+	r.Use(cors.Middleware())
 	router.GenerateRouters(r)
 	return r
 }
