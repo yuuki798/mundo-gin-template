@@ -1,7 +1,0 @@
-package appInitialize
-
-import "github.com/trancecho/mundo-be-template/internal/app/{{.appName}}"
-
-func init() {
-	apps = append(apps, &{{.appName}}.{{.appNameExport}}{Name: "{{.appName}} module"})
-}
