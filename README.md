@@ -1,6 +1,6 @@
 # mundo-quick-Template
 
-mundo团队 后端基于gin的快速开发模板
+后端基于gin的快速开发模板
 
 ## 
 
