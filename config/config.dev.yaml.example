@@ -1,0 +1,48 @@
+AppName: TimerMe3
+Mode: debug
+ProgramName: ""
+Author: ""
+Version: "v1"
+Host: "0.0.0.0"
+Port: "12349"
+LogPath: ""
+Auth:
+  Secret: ""
+  Issuer: ""
+Databases:
+  - Key: "MainMysql"
+    Type: "mysql"
+    Ip: "127.0.0.1"
+    Port: "13306"
+    User: "root"
+    Password: "123456"
+    Database: "mundo"
+
+Caches:
+  - Key: "MainRedis"
+    Ip: "127.0.0.1"
+    Port: "6379"
+    Type: "redis"
+    Password: ""
+    Db: 0
+
+Oss:
+  AccessKeySecret: ""
+  AccessKeyId: ""
+  EndPoint: ""
+  BucketName: ""
+  BaseURL: ""
+  Path: ""
+  CallbackUrl: ""
+  ExpireTime: 0
+Mail:
+  Smtp: ""
+  Port: 0
+  Account: ""
+  Password: ""
+Cms:
+  SecretId: ""
+  SecretKey: ""
+  AppId: ""
+  TemplateId: ""
+  Sign: ""

@@ -1,6 +1,7 @@
 package config
 
 type GlobalConfig struct {
+	AppName     string `yaml:"AppName"`
 	MODE        string `yaml:"Mode"`
 	ProgramName string `yaml:"ProgramName"`
 	AUTHOR      string `yaml:"Author"`
