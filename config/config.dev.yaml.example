@@ -4,7 +4,7 @@ ProgramName: ""
 Author: ""
 Version: "v1"
 Host: "0.0.0.0"
-Port: "12349"
+Port: "9001"
 LogPath: ""
 Auth:
   Secret: ""
